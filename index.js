@@ -41,6 +41,8 @@ app.use(requestLogger)
 
 app.use(cors())
 
+app.use(express.static('build'))
+
 morgan.token("data", (req, res) => {
   const { body } = req;
 
