@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
-const morgan = require("morgan");
+const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
 
@@ -22,19 +22,19 @@ app.use(cors())
 
 app.use(express.static('build'))
 
-morgan.token("data", (req, res) => {
-  const { body } = req;
+morgan.token('data', (request) => {
+  const { body } = request
 
-  return JSON.stringify(body);
-});
+  return JSON.stringify(body)
+})
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'missing name and/or number' 
+    return response.status(400).json({
+      error: 'missing name and/or number'
     })
   }
 
@@ -53,7 +53,7 @@ app.post('/api/persons', (request, response, next) => {
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
     response.json(persons)
-  }) 
+  })
 })
 
 app.get('/info', (request, response, next) => {
@@ -61,12 +61,12 @@ app.get('/info', (request, response, next) => {
     .then((count) => {
       const info =
       `<p>Phonebook has info for ${count} people</p>` +
-      `<p>${new Date()}</p>`;
-      response.send(info);
+      `<p>${new Date()}</p>`
+      response.send(info)
     })
     .catch((err) => {
-      console.error(err);
-      next(err);
+      console.error(err)
+      next(err)
     })
 })
 
@@ -86,7 +86,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -110,13 +110,13 @@ app.put('/api/persons/:id', (request, response, next) => {
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
-  
+
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if (error.name === 'CastError' && error.kind == 'ObjectId') {
+  if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' })
   }  else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
@@ -126,6 +126,6 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT  
+const PORT = process.env.PORT
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)

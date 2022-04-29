@@ -1,5 +1,6 @@
 module.exports = {
   'env': {
+    'node': true,
     'browser': true,
     'commonjs': true,
     'es2021': true
@@ -14,8 +15,9 @@ module.exports = {
       2
     ],
     'linebreak-style': [
+      0,
       'error',
-      'window'
+      'windows'
     ],
     'quotes': [
       'error',
